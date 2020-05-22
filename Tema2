@@ -1,0 +1,877 @@
+#include <iostream>
+#include <string.h>
+#include <stdlib.h>
+#include <list>
+#include<bits/stdc++.h>
+using namespace std;
+
+class animal
+{
+protected:
+    int cod;
+    static int n;
+public:
+    animal();
+    animal(int);
+    virtual ~animal();
+
+    virtual void afisare(ostream &out);
+    virtual void citire(istream &in);
+
+    animal& operator=(animal &a);
+    friend istream& operator>>(istream&, animal&);
+    friend ostream& operator<<(ostream&, animal&);
+    static void numar_animale()
+    {
+        cout<<"\nAu fost create "<<n<<" animale.\n";
+    }
+};
+int animal::n;
+animal::animal()
+{
+    cout<<"\nCONSTRUCTOR - animal (fara parametri).\n";
+    n++;
+    cod=0;
+}
+animal::animal(int c)
+{
+    cout<<"\nCONSTRUCTOR - animal (cu parametri) .\n";
+    n++;
+    cod=c;
+}
+void animal::citire(istream &in)
+{
+    cout<<"\nCITIRE - animal.\n";
+    cout<<"\nIntroduceti codul animalului: ";
+    in>>cod;
+}
+void animal::afisare(ostream &out)
+{
+    cout<<"\nAFISARE - animal.\n";
+    out<<"\nCodul animalului este: "<<cod<<"\n";
+}
+animal::~animal()
+{
+    cout<<"\nDESSTRUCTOR - animal.\n";
+}
+animal& animal::operator=(animal &a)
+{
+    cout<<"\nOPERATOR = - animal.\n";
+    if(this!=&a)
+    {
+        cod=a.cod;
+    }
+    return *this;
+}
+istream& operator>>(istream &in, animal& a)
+{
+    a.citire(in);
+    return in;
+}
+ostream& operator<<(ostream &out, animal& a)
+{
+    a.afisare(out);
+    return out;
+}
+/// ------------------------------------------
+
+class vertebrate:public animal
+{
+protected:
+    int numar_picioare;
+public:
+    vertebrate();
+    vertebrate(int,int);
+    ~vertebrate();
+
+    void citire(istream &in);
+    void afisare(ostream &out);
+
+    vertebrate& operator=(vertebrate &v);
+    friend istream& operator>>(istream&, vertebrate&);
+    friend ostream& operator<<(ostream&, vertebrate&);
+
+};
+vertebrate::vertebrate():animal()
+{
+    cout<<"\nCONSTRUCTOR - vertebrate (fara parametri).\n";
+    numar_picioare=0;
+}
+vertebrate::vertebrate(int c,int nr_p):animal(c)
+{
+    cout<<"\nCONSTRUCTOR - vertebrate (cu parametri).\n";
+    numar_picioare=nr_p;
+}
+vertebrate::~vertebrate()
+{
+    cout<<"\nDESTRUCTOR - vertebrate.\n";
+}
+void vertebrate::citire(istream &in)
+{
+    cout<<"\nCITIRE - vertebrate.\n";
+    animal::citire(in);
+    cout<<"Introduceti marimea vertebratei: ";
+    in>>numar_picioare;
+}
+void vertebrate::afisare(ostream &out)
+{
+    cout<<"\nAFISARE - vertebrate.\n";
+    animal::afisare(out);
+    out<<"Marimea vertebratei este: "<<numar_picioare<<"\n";
+}
+vertebrate& vertebrate::operator=(vertebrate &v)
+{
+    cout<<"\nOPERATOR = - vertebrate.\n";
+    if(this!=&v)
+    {
+        animal::operator=(v);
+        numar_picioare=v.numar_picioare;
+    }
+    return *this;
+}
+istream& operator>>(istream &in,vertebrate &v)
+{
+    v.citire(in);
+    return in;
+}
+ostream& operator<<(ostream &out,vertebrate &v)
+{
+    v.afisare(out);
+    return out;
+}
+
+/// -------------------------------------------
+
+class nevertebrate:public animal
+{
+protected:
+    int marime;
+public:
+    nevertebrate();
+    nevertebrate(int,int);
+    ~nevertebrate();
+
+    void citire(istream &in);
+    void afisare(ostream &out);
+
+    nevertebrate& operator=(nevertebrate &nv);
+    friend istream& operator>>(istream&, nevertebrate&);
+    friend ostream& operator<<(ostream&, nevertebrate&);
+
+};
+nevertebrate::nevertebrate():animal()
+{
+    cout<<"\nCONSTRUCTOR - nevertebrate (fara parametri) .\n";
+    marime=0;
+}
+nevertebrate::nevertebrate(int c,int m):animal(c)
+{
+    cout<<"\nCONSTRUCTOR - nevertebrate (cu parametri) .\n";
+    marime=m;
+}
+nevertebrate::~nevertebrate()
+{
+    cout<<"\nDESTRUCTOR - nevertebrate.\n";
+}
+void nevertebrate::citire(istream &in)
+{
+    cout<<"\nCITIRE - nevertebrate.\n";
+    animal::citire(in);
+    cout<<"Introduceti marimea nevertebratei: ";
+    in>>marime;
+}
+void nevertebrate::afisare(ostream &out)
+{
+    cout<<"\nAFISARE - nevertebrate.\n";
+    animal::afisare(out);
+    out<<"Marimea nevertebratei este: "<<marime<<"\n";
+}
+nevertebrate& nevertebrate::operator=(nevertebrate &nv)
+{
+    cout<<"\nOPERATOR = - nevertebrate.\n";
+    if(this!=&nv)
+    {
+        animal::operator=(nv);
+        marime=nv.marime;
+    }
+    return *this;
+}
+istream& operator>>(istream &in,nevertebrate &nv)
+{
+    nv.citire(in);
+    return in;
+}
+ostream& operator<<(ostream &out,nevertebrate &nv)
+{
+    nv.afisare(out);
+    return out;
+}
+
+/// ---------------------------------------------
+
+class pesti:public vertebrate
+{
+private:
+    bool rapitor;
+    int lungime;
+    string tip;
+    static int specializare;
+public:
+    pesti();
+    pesti(int,int,bool,int,string);
+    virtual ~pesti();
+    /*
+    int get_lungime()
+    {
+        return lungime;
+    }
+    bool get_rapitor()
+    {
+        return rapitor;
+    }
+    */
+    void citire(istream &in);
+    void afisare(ostream &out);
+
+    pesti& operator=(pesti &p);
+    friend istream& operator>>(istream&, pesti&);
+    friend ostream& operator<<(ostream&, pesti&);
+    static void numar_pesti_lungime()
+    {
+        cout<<"\nS-au citit "<<specializare<<" pesti rapitori de lungime mai mare decat 1.\n";
+    }
+
+};
+int pesti::specializare;
+pesti::pesti():vertebrate()
+{
+    cout<<"\nCONSTRUCTOR - pesti (fara parametri) .\n";
+    rapitor=0;
+    lungime=0;
+    tip=" ";
+}
+pesti::pesti(int c,int nr_p,bool r,int l,string t):vertebrate(c,nr_p)
+{
+    cout<<"\nCONSTRUCTOR - pesti (cu parametri) .\n";
+    rapitor=r;
+    lungime=l;
+    tip=t;
+    if(l>1 && r==1)
+        specializare++;
+}
+pesti::~pesti()
+{
+    cout<<"\nDESTRUCTOR - pesti.\n";
+}
+void pesti::citire(istream &in)
+{
+    cout<<"\nCITIRE - pesti.\n";
+    vertebrate::citire(in);
+    cout<<"\nIntroduceti 1-rapitor, 0-altfel :";
+    in>>rapitor;
+    cout<<"\nIntroduceti lungimea pestelui :";
+    in>>lungime;
+    cout<<"\nIntroduceti tipul pestelui :\n";
+    getline(in,tip);
+    getline(in,tip);
+    if(lungime>1 && rapitor==1)
+        specializare++;
+}
+void pesti::afisare(ostream &out)
+{
+    cout<<"\nAFISARE - pesti.\n";
+    vertebrate::afisare(out);
+    if(rapitor==1)
+        out<<"\nPeste rapitor\n";
+    out<<"\nLungimea pestelui este : "<<lungime<<"\n";
+    out<<"\nTipul pestelui este : "<<tip<<"\n";
+    //pesti::numar_pesti_lungime();
+}
+pesti& pesti::operator=(pesti &p)
+{
+    cout<<"\nOPERATOR = - pesti.\n";
+    if(this!=&p)
+    {
+        vertebrate::operator=(p);
+        rapitor=p.rapitor;
+        lungime=p.lungime;
+        tip=p.tip;
+    }
+    return *this;
+}
+istream& operator>>(istream &in,pesti &p)
+{
+    p.citire(in);
+    return in;
+}
+ostream& operator<<(ostream &out,pesti &p)
+{
+    p.afisare(out);
+    return out;
+}
+
+/// ----------------------------------------
+
+class pasari:public vertebrate
+{
+private:
+    string tip;
+    bool domestice;
+public:
+    pasari();
+    pasari(int,int,bool,string);
+    virtual ~pasari();
+
+    void citire(istream &in);
+    void afisare(ostream &out);
+
+    pasari& operator=(pasari &p);
+    friend istream& operator>>(istream&, pasari&);
+    friend ostream& operator<<(ostream&, pasari&);
+};
+pasari::pasari():vertebrate()
+{
+    cout<<"\nCONSTRUCTOR - pasari (fara parametri) .\n";
+    domestice=0;
+    tip=" ";
+}
+pasari::pasari(int c,int nr_p,bool d,string t):vertebrate(c,nr_p)
+{
+    cout<<"\nCONSTRUCTOR - pasari (cu parametri) .\n";
+    domestice=d;
+    tip=t;
+}
+pasari::~pasari()
+{
+    cout<<"\nDESTRUCTOR - pasari.\n";
+}
+void pasari::citire(istream &in)
+{
+    cout<<"\nCITIRE - pasari.\n";
+    vertebrate::citire(in);
+    cout<<"\nIntroduceti 1-domestica, 0-altfel :";
+    in>>domestice;
+    cout<<"\nIntroduceti tipul pasarii :\n";
+    getline(in,tip);
+    getline(in,tip);
+}
+void pasari::afisare(ostream &out)
+{
+    cout<<"\nAFISARE - pasari.\n";
+    vertebrate::afisare(out);
+    if(domestice==1)
+        out<<"\nPasare domestica\n";
+    else
+        out<<"\nPasare salbatica\n";
+    out<<"\nTipul pasarii este : "<<tip<<"\n";
+}
+pasari& pasari::operator=(pasari &p)
+{
+    cout<<"\nOPERATOR = - pasari.\n";
+    if(this!=&p)
+    {
+        vertebrate::operator=(p);
+        domestice=p.domestice;
+        tip=p.tip;
+    }
+    return *this;
+}
+istream& operator>>(istream &in,pasari &p)
+{
+    p.citire(in);
+    return in;
+}
+ostream& operator<<(ostream &out,pasari &p)
+{
+    p.afisare(out);
+    return out;
+}
+
+/// ---------------------------------------
+
+class mamifere:public vertebrate
+{
+private:
+    string tip;
+    bool domestice;
+public:
+    mamifere();
+    mamifere(int,int,bool,string);
+    virtual ~mamifere();
+
+    void citire(istream &in);
+    void afisare(ostream &out);
+
+    mamifere& operator=(mamifere &p);
+    friend istream& operator>>(istream&, mamifere&);
+    friend ostream& operator<<(ostream&, mamifere&);
+};
+mamifere::mamifere():vertebrate()
+{
+    cout<<"\nCONSTRUCTOR - mamifere (fara parametri).\n";
+    domestice=0;
+    tip=" ";
+}
+mamifere::mamifere(int c,int nr_p,bool d,string t):vertebrate(c,nr_p)
+{
+    cout<<"\nCONSTRUCTOR - mamifere (cu parametri).\n";
+    domestice=d;
+    tip=t;
+}
+mamifere::~mamifere()
+{
+    cout<<"\nDESTRUCTOR - mamifere.\n";
+}
+void mamifere::citire(istream &in)
+{
+    cout<<"\nCITIRE - mamifere.\n";
+    vertebrate::citire(in);
+    cout<<"\nIntroduceti 1-domestic, 0-altfel :";
+    in>>domestice;
+    cout<<"\nIntroduceti tipul mamiferului :\n";
+    getline(in,tip);
+    getline(in,tip);
+}
+void mamifere::afisare(ostream &out)
+{
+    cout<<"\nAFISARE - mamifere.\n";
+    vertebrate::afisare(out);
+    if(domestice==1)
+        out<<"\nMamifer domestic\n";
+    else
+        out<<"\nMamifer salbatic\n";
+    out<<"\nTipul mamiferului este : "<<tip<<"\n";
+}
+mamifere& mamifere::operator=(mamifere &m)
+{
+    cout<<"\nOPERATOR = - mamifere.\n";
+    if(this!=&m)
+    {
+        vertebrate::operator=(m);
+        domestice=m.domestice;
+        tip=m.tip;
+    }
+    return *this;
+}
+istream& operator>>(istream &in,mamifere &m)
+{
+    m.citire(in);
+    return in;
+}
+ostream& operator<<(ostream &out,mamifere&m)
+{
+    m.afisare(out);
+    return out;
+}
+
+/// ---------------------------------------
+
+class reptile:public vertebrate
+{
+private:
+    string tip;
+public:
+    reptile();
+    reptile(int,int,string);
+    virtual ~reptile();
+
+    void citire(istream &in);
+    void afisare(ostream &out);
+
+    reptile& operator=(reptile &r);
+    friend istream& operator>>(istream&, reptile&);
+    friend ostream& operator<<(ostream&, reptile&);
+};
+reptile::reptile():vertebrate()
+{
+    cout<<"\nCONSTRUCTOR - reptile (fara parametri).\n";
+    tip=" ";
+}
+reptile::reptile(int c,int nr_p,string t):vertebrate(c,nr_p)
+{
+    cout<<"\nCONSTRUCTOR - reptile (cu parametri).\n";
+    tip=t;
+}
+reptile::~reptile()
+{
+    cout<<"\nDESTRUCTOR - reptile.\n";
+}
+void reptile::citire(istream &in)
+{
+    cout<<"\nCITIRE - reptile.\n";
+    vertebrate::citire(in);
+    cout<<"\nIntroduceti tipul reptilei :\n";
+    getline(in,tip);
+    getline(in,tip);
+}
+void reptile::afisare(ostream &out)
+{
+    cout<<"\nAFISARE - reptile.\n";
+    vertebrate::afisare(out);
+    out<<"\nTipul reptilei este : "<<tip<<"\n";
+}
+reptile& reptile::operator=(reptile &r)
+{
+    cout<<"\nOPERATOR = - reptile.\n";
+    if(this!=&r)
+    {
+        vertebrate::operator=(r);
+        tip=r.tip;
+    }
+    return *this;
+}
+istream& operator>>(istream &in,reptile &r)
+{
+    r.citire(in);
+    return in;
+}
+ostream& operator<<(ostream &out,reptile &r)
+{
+    r.afisare(out);
+    return out;
+}
+
+/// -------------------------------------------
+
+template<class t> class AtlasZoologic
+{
+    t *v;
+    int nr_file;
+    static int nr_animale;
+    string *fisa_observatie;
+public:
+    AtlasZoologic()
+    {
+        cout<<"\nCONSTRUCTOR - ATLASZOOLOGIC.\n";
+        nr_file=0;
+        v=new t[1];
+        fisa_observatie=new string[1];
+        fisa_observatie[0]="necunoscut";
+    }
+    ~AtlasZoologic()
+    {
+        cout<<"\nDESTRUCTOR - ATLASZOOLOGIC.\n";
+        delete []v;
+    }
+    friend istream& operator>>(istream &in, AtlasZoologic <t> &a)
+    {
+        cout<<"\nCITIRE - ATLASZOOLOGIC.\n";
+        cout<<"Introduceti numarul de file: ";
+        in>>a.nr_file;
+        a.v=new t[a.nr_file];
+        a.fisa_observatie=new string[a.nr_file];
+        cout<<"Introduceti obiectele:\n";
+        for(int i=0; i<a.nr_file; i++)
+        {
+            cout<<"Numar animale curent:"<<nr_animale<<"\n\n";
+            nr_animale++;
+            in>>a.v[i];
+            cout<<"Fisa de observatie:\n";
+            getline(in,a.fisa_observatie[i]);
+            getline(in,a.fisa_observatie[i]);
+            cout<<"\n";
+        }
+        cout<<"Numar animale curent:"<<nr_animale<<"\n\n";
+        return in;
+    }
+    friend ostream& operator<<(ostream &out,AtlasZoologic <t> &a)
+    {
+        cout<<"\nAFISARE - ATLASZOOLOGIC.\n";
+        out<<"In atlasul zoologic sunt urmatoarele "<<a.nr_file<<" file:\n";
+        for(int i=0; i<a.nr_file; i++)
+        {
+            out<<i+1<<".\n";
+            out<<a.v[i]<<"\n";
+            out<<"\nFisa de observatie: ";
+            out<<a.fisa_observatie[i]<<"\n";
+        }
+        get_nr_animale();
+        return out;
+    }
+    AtlasZoologic& operator=(AtlasZoologic<t> &a)
+    {
+        cout<<"\nOPERATOR = - ATLASZOOLOGIC.\n";
+        if(this!=&a)
+        {
+            t::operator=(a);
+            for(int i=0; i<a.nr_file; i++)
+            {
+                v[i]=a.v[i];
+                fisa_observatie[i]=a.fisa_observatie[i];
+            }
+        }
+        return *this;
+    }
+    AtlasZoologic& operator+=(const int i)
+    {
+        cout<<"\nOPERATOR += - ATLASZOOLOGIC.\n";
+        string s;
+        cout<<"Introduceti textul din fisa de observatie: ";
+        getline(cin,s);
+        getline(cin,s);
+        fisa_observatie[i]=s;
+    }
+    static void get_nr_animale()
+    {
+        cout<<"\nAu fost adaugate "<<nr_animale<<" animale.\n";
+    }
+};
+template<class t>int AtlasZoologic<t>::nr_animale;
+
+/// --------------------------------------------------
+
+template <> class AtlasZoologic <pesti>
+{
+    pesti *v;
+    int nr_file;
+    static int numar;
+    string *fisa_observatie;
+public:
+    AtlasZoologic()
+    {
+        nr_file=0;
+        v=new pesti[1];
+        fisa_observatie=new string[1];
+        fisa_observatie[0]="necunoscut";
+    }
+    ~AtlasZoologic()
+    {
+        delete []v;
+    }
+    friend istream& operator>>(istream &in, AtlasZoologic <pesti> &a)
+    {
+        cout<<"Introduceti numarul de file: ";
+        in>>a.nr_file;
+        a.v=new pesti[a.nr_file];
+        a.fisa_observatie=new string[a.nr_file];
+        cout<<"Introduceti obiectele:\n";
+        for(int i=0; i<a.nr_file; i++)
+        {
+            in>>a.v[i];
+            cout<<"Fisa de observatie:\n";
+            getline(in,a.fisa_observatie[i]);
+            cout<<"\n";
+        }
+        return in;
+    }
+    friend ostream& operator<<(ostream &out,AtlasZoologic <pesti> &a)
+    {
+        out<<"In atlasul zoologic sunt urmatoarele "<<a.nr_file<<" file:\n";
+        for(int i=0; i<a.nr_file; i++)
+        {
+            out<<i+1<<".\n";
+            out<<a.v[i]<<"\n";
+            out<<"\nFisa de observatie: ";
+            out<<a.fisa_observatie[i]<<"\n";
+        }
+        pesti::numar_pesti_lungime();
+        return out;
+    }
+    AtlasZoologic& operator+=(const int i)
+    {
+        cout<<"\nOPERATOR += - ATLASZOOLOGIC.\n";
+        string s;
+        cout<<"Introduceti textul din fisa de observatie: ";
+        getline(cin,s);
+        getline(cin,s);
+        fisa_observatie[i]=s;
+    }
+};
+
+/// -----------------------------------------------------
+void menu_output()
+{
+    cout<<"\nTEMA 2 - ANIMALE\n";
+    cout<<"\n\t\tMENIU:";
+    cout<<"\n===========================================\n";
+    cout<<"\n";
+    cout<<"1. Citeste informatii despre animalele implicate. --- UPCAST & LATE-BINDING";
+    cout<<"\n";
+    cout<<"2. Atlas Zoologic --- TEMPLATE (animal).";
+    cout<<"\n";
+    cout<<"3. Atlas Zoologic --- TEMPLATE (nevertebrate).";
+    cout<<"\n";
+    cout<<"4. Atlas Zoologic --- TEMPLATE (vertebrate).";
+    cout<<"\n";
+    cout<<"5. Atlas Zoologic --- TEMPLATE (mamifere).";
+    cout<<"\n";
+    cout<<"6. Atlas Zoologic --- TEMPLATE (pasari).";
+    cout<<"\n";
+    cout<<"7. Atlas Zoologic --- TEMPLATE (reptile).";
+    cout<<"\n";
+    cout<<"8. Atlas Zoologic --- TEMPLATE (pesti->specializare).";
+    cout<<"\n";
+    cout<<"9. Atlas Zoologic --- TEMPLATE (animal) : modificare fisa de observatie.";
+    cout<<"\n";
+    cout<<"0. Iesire.";
+    cout<<"\n";
+}
+void tip(animal *&p, int &i, list<animal*> &l)
+{
+    string s;
+    cout<<"\n";
+    cout<<"Introduceti tipul animalului "<<i+1<<": ";
+    cin>>s;
+    try
+    {
+        if(s=="animal")
+        {
+            p=new animal;
+            cin>>*p;
+            l.push_back(*&p);
+            i++;
+        }
+        else if(s=="nevertebrate")
+        {
+            p=new nevertebrate;
+            cin>>*p;
+            l.push_back(*&p);
+            i++;
+        }
+        else if(s=="vertebrate")
+        {
+            p=new vertebrate;
+            cin>>*p;
+            l.push_back(*&p);
+            i++;
+        }
+        else if(s=="pesti")
+        {
+            p=new pesti;
+            cin>>*p;
+            l.push_back(*&p);
+            i++;
+        }
+        else if(s=="pasari")
+        {
+            p=new pasari;
+            cin>>*p;
+            l.push_back(*&p);
+            i++;
+        }
+        else if(s=="mamifere")
+        {
+            p=new mamifere;
+            cin>>*p;
+            l.push_back(*&p);
+            i++;
+        }
+        else if(s=="reptile")
+        {
+            p=new reptile;
+            cin>>*p;
+            l.push_back(*&p);
+            i++;
+        }
+        else
+            throw 10;
+    }
+    catch (bad_alloc var)
+    {
+        cout << "Allocation Failure\n";
+        exit(EXIT_FAILURE);
+    }
+    catch(int j)
+    {
+        cout<<"Nu ati introdus o clasa valida. Incercati animal, vertebrate, nevertebrate, pesti, pasari, mamifere sau reptile.\n ";
+    }
+}
+void menu()
+{
+    int option;
+    option=0;
+    int n=0;
+    do
+    {
+        menu_output();
+        cout<<"\nIntroduceti numarul actiunii: ";
+        cin>>option;
+        if (option==1)
+        {
+            list <animal*> atlas;
+            animal **v;
+            int n;
+            cout<<"Dati nr de obiecte:";
+            cin>>n;
+            v=new animal*[n];
+            for(int i=0; i<n;)
+                tip(v[i],i,atlas);
+            cout<<"\nAfisare:\n";
+
+            list<animal*>::iterator i;
+            cout << "---------------------------------------------------------------\n";
+            for (i = atlas.begin(); i != atlas.end(); ++i)
+                cout << (**i)<<"\n-------------------\n";
+        }
+        if (option==2)
+        {
+            AtlasZoologic <animal> a;
+            cin>>a;
+            cout<<a;
+        }
+        if (option==3)
+        {
+            AtlasZoologic <nevertebrate> a;
+            cin>>a;
+            cout<<a;
+        }
+        if (option==4)
+        {
+            AtlasZoologic <vertebrate> a;
+            cin>>a;
+            cout<<a;
+        }
+        if (option==5)
+        {
+            AtlasZoologic <mamifere> a;
+            cin>>a;
+            cout<<a;
+        }
+        if (option==6)
+        {
+            AtlasZoologic <pasari> a;
+            cin>>a;
+            cout<<a;
+        }
+        if (option==7)
+        {
+            AtlasZoologic <reptile> a;
+            cin>>a;
+            cout<<a;
+        }
+        if(option==8)
+        {
+            AtlasZoologic <pesti> a;
+            cin>>a;
+            cout<<a;
+        }
+        if (option==9)
+        {
+            AtlasZoologic <animal> a;
+            cin>>a;
+            cout<<"Introduceti numarul paginii in care doriti sa modificati fisa de observatie: ";
+            int i;
+            cin>>i;
+            i--;
+            a+=i;
+            cout<<a;
+        }
+        if (option==0)
+        {
+            cout<<"\nEXIT\n\n";
+        }
+        if (option<0||option>9)
+        {
+            cout<<"\nSelectie invalida\n";
+        }
+        cout<<"\n";
+        system("pause");
+        system("cls");
+    }
+    while(option!=0);
+}
+int main()
+{
+    menu();
+    return 0;
+}
